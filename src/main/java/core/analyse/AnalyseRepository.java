@@ -1,4 +1,6 @@
 package core.analyse;
 
-public class AnalyseRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AnalyseRepository extends JpaRepository<Analyse,Integer> {
 }

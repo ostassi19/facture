@@ -1,4 +1,6 @@
 package core.reglement;
 
-public class ReglementRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ReglementRepository extends JpaRepository<Reglement,Integer> {
 }
