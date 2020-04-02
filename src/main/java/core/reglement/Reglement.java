@@ -23,14 +23,14 @@ public class Reglement {
 
     private String refReglement;
     private Float monatant;
-    // to correct joinColumns
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "reglement_facture",
             joinColumns = {
-                    @JoinColumn(name = "ref_", referencedColumnName = "id",
+                    @JoinColumn(name = "ref_reglement", referencedColumnName = "ref_reglement",
                             nullable = false, updatable = false)},
             inverseJoinColumns = {
-                    @JoinColumn(name = "course_id", referencedColumnName = "id",
+                    @JoinColumn(name = "ref_facture", referencedColumnName = "ref_facture",
                             nullable = false, updatable = false)})
     private Facture facture;
 }

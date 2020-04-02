@@ -1,5 +1,6 @@
 package core.facture;
 
+import core.commnde.Commande;
 import core.reglement.Reglement;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,5 +29,8 @@ public class Facture {
     private int nbrelancement;
 
     @ManyToMany(mappedBy = "reglement", fetch = FetchType.LAZY)
-    private Reglement R;
+    private Reglement reglement;
+
+    @ManyToMany(mappedBy = "commande", fetch = FetchType.LAZY)
+    private Commande commande;
 }
