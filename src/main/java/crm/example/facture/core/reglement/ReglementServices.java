@@ -52,5 +52,30 @@ public class ReglementServices {
         return new ResponseEntity<>( HttpStatus.OK);
     }
 
+    public ResponseEntity<?> updateReglement(int id, Reglement reglement) {
+        Optional<Reglement> reglementOptional= reglementRepository.findById(id);
+
+        if(!reglementOptional.isPresent()){
+            ErrorResponseModel errorResponseModel = new ErrorResponseModel ("reglement not found");
+            return new ResponseEntity<>(errorResponseModel,HttpStatus.BAD_REQUEST);
+        }
+
+        Reglement dataBaseReglement= reglementOptional.get();
+
+
+
+        if(reglement.getDelai() != null)
+            dataBaseReglement.setDelai(reglement.getDelai());
+
+        if(reglement.getMonatant() != null)
+            dataBaseReglement.setMonatant(reglement.getMonatant());
+
+
+
+        reglementRepository.save(dataBaseReglement);
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
 }
 

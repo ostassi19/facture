@@ -1,14 +1,12 @@
 package crm.example.facture.core.commnde;
 
-import crm.example.facture.core.facture.Facture;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 
 @Getter
 @Setter
@@ -21,10 +19,16 @@ public class Commande {
 
     private String refCommande;
     private Date date;
+    private float prix_unitaire;
+    private  float reduction;
+    private String ref_produit;
+    private String Designation_produit;
+    private float tva;
+    private int quantité;
+    private float montant;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "commande_facture",
-            joinColumns = @JoinColumn(name = "ref_commande"),
-            inverseJoinColumns = @JoinColumn(name = "ref_facture"))
-    private Set<Facture> factures = new HashSet<>();
+
+
+
+
 }

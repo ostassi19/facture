@@ -19,13 +19,19 @@ public class CommandeServices {
 
     public  ResponseEntity<?> creatCommande(Commande commande) {
 
+        float prix;
+
+        prix = commande.getPrix_unitaire() * commande.getQuantité() *(1- commande.getReduction() ) * (1 + commande.getTva());
+        commande.setMontant(prix);
         commande = commandeRepository.save(commande);
         return new ResponseEntity<>(commande, HttpStatus.OK);
 
     }
 
 
+
     public List<Commande> getCommandes() {
+
         return commandeRepository.findAll();
     }
 

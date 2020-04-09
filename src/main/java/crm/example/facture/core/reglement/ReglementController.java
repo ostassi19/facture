@@ -34,4 +34,10 @@ public class ReglementController {
     {
         return reglementServices.deleteReglement(id);
     }
+
+    @PutMapping("reglement/{id}")
+
+    public ResponseEntity<?> updateReglement(@PathVariable int id,@RequestBody Reglement reglement){
+        return reglementServices.updateReglement(id,reglement);
+    }
 }

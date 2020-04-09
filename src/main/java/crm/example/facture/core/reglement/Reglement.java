@@ -7,6 +7,7 @@ import lombok.Setter;
 
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,6 +24,10 @@ public class Reglement {
 
     private String refReglement;
     private Float monatant;
+
+    private Date date;
+    private Date delai;
+    private boolean etat;
 
     /*@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "reglement_facture",
@@ -52,11 +57,7 @@ public class Reglement {
     // behi hatiya tawa updatable = false : normaleùment 7asib fehmi in basit 5ater ma 5dimtich beh 9bel
     // updatable = false : mat5alikich ta3mil update ili attrubut haka fhimtnin ? oui
     // zaydin normalent? ?Oui
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "reglement_facture",
-            joinColumns = @JoinColumn(name = "ref_reglement"),
-            inverseJoinColumns = @JoinColumn(name = "ref_facture"))
-    private Set<Facture> factures = new HashSet<>();
+
 
     // aya fhimt kol chay mlanyto many ? oui bb
     // behi kamil la5ra tawa  ok

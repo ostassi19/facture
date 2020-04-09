@@ -62,9 +62,15 @@ public class FactureServices {
         }
 
         Facture dataBaseFacture= factureOptional.get();
+//
+//        if(facture.getMontant() != 0)
+//            dataBaseFacture.setMontant(facture.getMontant());
 
-        if(facture.getMontant() != 0)
-            dataBaseFacture.setMontant(facture.getMontant());
+        if(facture.getDatePaiement() != null)
+            dataBaseFacture.setDatePaiement(facture.getDatePaiement());
+
+        if(facture.getNbrelancement()!= 0)
+            dataBaseFacture.setNbrelancement(facture.getNbrelancement());
 
         factureRepository.save(dataBaseFacture);
         return new ResponseEntity<>(HttpStatus.OK);

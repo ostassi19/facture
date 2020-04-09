@@ -1,5 +1,4 @@
 package crm.example.facture.core.facture;
-
 import crm.example.facture.core.commnde.Commande;
 import crm.example.facture.core.entreprise.Entreprise;
 import crm.example.facture.core.personnel.Personnel;
@@ -11,8 +10,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+
 
 @Getter
 @Setter
@@ -28,18 +27,10 @@ public class Facture {
     private Date datePaiement;
     private float montant;
     private int nbrelancement;
+    private boolean etat;
 
-   /* @ManyToMany(mappedBy = "reglement", fetch = FetchType.LAZY)
-    private Set<Reglement> reglements = new HashSet<>();
-    //private Reglement reglement;*/
 
-    /*@ManyToMany(mappedBy = "commande", fetch = FetchType.LAZY)
-    //private Commande commande;
-    private Set<Commande> commandes = new HashSet<>();*/
 
-    /*@ManyToOne(cascade = {CascadeType.PERSIST})
-    private Personnel personnels;
-*/
 
     // lina a7na n7ibou njibou les Entreprise il kol (selecet all) : @ManyToOne
     // behi
@@ -55,6 +46,18 @@ public class Facture {
     @JoinColumn(name = "Personnel")
     private Personnel personnels;//suiv many to many kahaw??one to may? yesab3thli il conception
 
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "commande_facture",
+            joinColumns = @JoinColumn(name = "ref_facture"),
+            inverseJoinColumns = @JoinColumn(name = "ref_commande"))
+    private Set<Commande> commandes = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "reglement_facture",
+            joinColumns = @JoinColumn(name = "ref_facture"),
+            inverseJoinColumns = @JoinColumn(name = "ref_reglement"))
+    private Set<Reglement> reglements = new HashSet<>();
 
 
 
