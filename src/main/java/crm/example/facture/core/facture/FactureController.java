@@ -6,37 +6,39 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/facture")
 public class FactureController {
 
     @Autowired
     FactureServices factureServices;
 
-    @PostMapping("/facture")
+    @PostMapping("/add")
     public ResponseEntity<?> creatFacture(@RequestBody Facture facture){
         return factureServices.creatFacture(facture);
     }
 
-    @GetMapping("/factures")
+    @GetMapping("/list")
     public List<Facture> getFactures(){
         return factureServices.getFactures();
     }
 
 
-    @GetMapping("facture/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?>   getOneFacture(@PathVariable int id ){
 
         return factureServices.getOneFacture(id);
     }
 
 
-    @DeleteMapping("/facture/{id}")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<?> deleteFacture(@PathVariable int id)
     {
         return factureServices.deleteFacture(id);
     }
 
-    @PutMapping("/facture/{id}")
+    @PutMapping("/{id}/edit")
     public ResponseEntity<?> updateFacture(@PathVariable int id, @RequestBody Facture facture){
         return  factureServices.updateFacture(id,facture);
     }
