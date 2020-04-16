@@ -19,7 +19,7 @@ public class Analyse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String refReglement;
+    private String refAnalyse;
     private Date datepaiement;
     private int nbrelancement;
 }
