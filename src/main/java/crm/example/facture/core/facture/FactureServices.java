@@ -1,19 +1,33 @@
 package crm.example.facture.core.facture;
 
+import crm.example.facture.core.commnde.Commande;
+import crm.example.facture.core.commnde.CommandeRepository;
+import crm.example.facture.core.personnel.Personnel;
+import crm.example.facture.core.personnel.PersonnelRepository;
+import crm.example.facture.core.reglement.Reglement;
+import crm.example.facture.core.reglement.ReglementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import crm.example.facture.utils.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class FactureServices {
 
     @Autowired
     FactureRepository factureRepository;
+
+    @Autowired
+    CommandeRepository commandeRepository;
+
+    @Autowired
+    PersonnelRepository personnelRepository;
+
+    @Autowired
+    ReglementRepository reglementRepository;
 
     public ResponseEntity<?> creatFacture(Facture facture) {
 
@@ -71,6 +85,19 @@ public class FactureServices {
 
         if(facture.getNbrelancement()!= 0)
             dataBaseFacture.setNbrelancement(facture.getNbrelancement());
+        if(!facture.getCommandes().isEmpty())
+        {
+            List<Commande> comm = new ArrayList<Commande>();
+            facture.getCommandes().forEach(
+                    commande -> {
+                        Optional<Commande> c = commandeRepository.findById(commande.getId());
+                        Commande cc = c.get();
+                        comm.add(cc);
+                    });
+            System.out.println("c" + comm);
+            if (!comm.isEmpty())
+                dataBaseFacture.setCommandes(comm);
+        }
 
         factureRepository.save(dataBaseFacture);
         return new ResponseEntity<>(HttpStatus.OK);

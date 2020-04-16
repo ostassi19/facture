@@ -3,6 +3,8 @@ package crm.example.facture.core.commnde;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -26,9 +28,6 @@ public class Commande {
     private float tva;
     private int quantité;
     private float montant;
-
-
-
 
 
 }

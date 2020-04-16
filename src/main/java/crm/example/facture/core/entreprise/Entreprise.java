@@ -38,6 +38,6 @@ public class Entreprise {
     // behi les commentaire hathom 5alihom w kamil les reste mta3 il mayto one w kol wa7da te5dimha run thbet faha kani cava
     // 9adim sinon non
     // pas a pas ok ? oki ntaba3 fik aa bahi kamila ya
-    @OneToMany( fetch = FetchType.LAZY ,mappedBy = "entreprises")
-    private Collection<Facture> factures;
+    /*@OneToMany( fetch = FetchType.LAZY ,mappedBy = "entreprises")
+    private Collection<Facture> factures;*/
 }

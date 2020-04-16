@@ -33,8 +33,8 @@ public class Personnel {
 
     /*@OneToMany(mappedBy = "facture", cascade = CascadeType.ALL)
     private List<Facture> factures;*/
-    @OneToMany( fetch = FetchType.LAZY ,mappedBy = "personnels")
-    private Collection<Facture> factures;
+    /*@OneToMany( fetch = FetchType.LAZY ,mappedBy = "personnels")
+    private Collection<Facture> factures;*/
 
 
 }
