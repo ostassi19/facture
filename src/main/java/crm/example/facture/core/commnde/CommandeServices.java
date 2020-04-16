@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import crm.example.facture.utils.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,7 @@ public class CommandeServices {
 
         prix = commande.getPrix_unitaire() * commande.getQuantité() *(1- commande.getReduction() ) * (1 + commande.getTva());
         commande.setMontant(prix);
+        commande.setDate(new Date());
         commande = commandeRepository.save(commande);
         return new ResponseEntity<>(commande, HttpStatus.OK);
 

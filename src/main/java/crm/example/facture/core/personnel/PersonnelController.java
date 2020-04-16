@@ -6,30 +6,33 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
+@RequestMapping("/personnel")
 public class PersonnelController {
     @Autowired
     PersonnelServices personnelServices;
 
-    @PostMapping("/personnel")
+    @PostMapping("/add")
     public ResponseEntity<?> creatPersonnel(@RequestBody Personnel personnel){
         return personnelServices.creatPersonnel(personnel);
     }
 
-    @GetMapping("/personnels")
+    @GetMapping("/all")
     public List<Personnel> getPersonnels(){
         return personnelServices.getPersonnels();
     }
 
 
-    @GetMapping("personnel/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?>   getOnePersonnel(@PathVariable int id ){
 
         return personnelServices.getOnePersonnel(id);
     }
 
 
-    @DeleteMapping("/personnel/{id}")
+
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<?> deletePersonnel(@PathVariable int id)
     {
         return personnelServices.deletePersonnel(id);

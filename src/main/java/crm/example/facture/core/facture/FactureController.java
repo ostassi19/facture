@@ -40,6 +40,7 @@ public class FactureController {
 
     @PutMapping("/{id}/edit")
     public ResponseEntity<?> updateFacture(@PathVariable int id, @RequestBody Facture facture){
+        System.out.println(facture.getCommandes());
         return  factureServices.updateFacture(id,facture);
     }
 
