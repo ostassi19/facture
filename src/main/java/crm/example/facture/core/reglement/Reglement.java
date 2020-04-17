@@ -28,6 +28,7 @@ public class Reglement {
     private Date date;
     private Date delai;
     private boolean etat;
+    private int type;
 
     // lina a7na n7ibou njibou les Entreprise il kol (selecet all) : @ManyToOne
     // behi

@@ -4,6 +4,7 @@ import crm.example.facture.core.entreprise.Entreprise;
 import crm.example.facture.core.entreprise.EntrepriseRepository;
 import crm.example.facture.core.facture.Facture;
 import crm.example.facture.core.facture.FactureRepository;
+import crm.example.facture.core.facture.FactureServices;
 import crm.example.facture.core.personnel.Personnel;
 import crm.example.facture.core.personnel.PersonnelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,22 +33,30 @@ public class ReglementServices {
     @Autowired
     EntrepriseRepository entrepriseRepository;
 
+    public void reglement (){
+        Facture ff = new Facture();
+        ff.setIsregled(true);
+        factureRepository.save(ff);
+    }
     public ResponseEntity<?> creatReglement(Reglement reglement) {
 
         float montant = 0;
         if (!reglement.getFactures().isEmpty()) {
-            if (reglement.getMonatant() != null){
+            if (reglement.getMonatant() != null && reglement.getFactures().size() == 1 && reglement.getType() == 1){
                 montant = reglement.getMonatant();
+                reglement();
                 //System.out.println("momtant:" + montant);
             }
-            else {
+            else if (reglement.getMonatant() == null
+                    && reglement.getFactures().size() > 1
+                    && reglement.getType() == 2 ) {
                 final float[] m = {0};
                 reglement.getFactures().forEach(
                         facture -> {
-
                             Optional<Facture> facture1 = factureRepository.findById(facture.getId());
                             Facture f = facture1.get();
                             m[0] += f.getMontant();
+                            reglement();
                             /*System.out.println("montant fact:" + f.getMontant());
                             System.out.println("m:" + m[0]);*/
                         });

@@ -23,11 +23,15 @@ public class Facture {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String refFacture;
-    private Date dateEmission;
-    private Date datePaiement;
+    private Date dateEmission;// wa9thech tsan3et
+    private Date datePaiement;// wa9thech 5olset
+    private Date dateFacture;// wa9thch bech to5les
     private float montant;
+    private float montant_relance;
     private int nbrelancement;
-    private boolean etat;
+    private boolean etat_reglement;
+    private boolean isPayed;
+    private boolean isregled;
 
 
 
@@ -37,21 +41,5 @@ public class Facture {
             inverseJoinColumns = @JoinColumn(name = "ref_commande"))
     private List<Commande> commandes = new ArrayList<Commande>();
 
-
-    /*@Override
-    public String toString(){
-        String info = "";
-        JSONObject jsonInfo = new JSONObject();
-        jsonInfo.put("id",this.id);
-        JSONArray subArray = new JSONArray();
-        this.commandes.forEach(sub->{
-            JSONObject subJson = new JSONObject();
-            subJson.put("id", sub.getId());
-            subArray.appendElement(subJson);
-        });
-        jsonInfo.put("Commande", subArray);
-        info = jsonInfo.toString();
-        return info;
-    }*/
 
 }

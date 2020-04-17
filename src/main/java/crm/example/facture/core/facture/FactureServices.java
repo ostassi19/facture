@@ -31,6 +31,7 @@ public class FactureServices {
 
     public ResponseEntity<?> creatFacture(Facture facture) {
 
+        facture.setNbrelancement(0);
         facture = factureRepository.save(facture);
         return new ResponseEntity<>(facture, HttpStatus.OK);
 
@@ -83,8 +84,6 @@ public class FactureServices {
         if(facture.getDatePaiement() != null)
             dataBaseFacture.setDatePaiement(facture.getDatePaiement());
 
-        if(facture.getNbrelancement()!= 0)
-            dataBaseFacture.setNbrelancement(facture.getNbrelancement());
         if(!facture.getCommandes().isEmpty())
         {
             List<Commande> comm = new ArrayList<Commande>();
@@ -102,5 +101,27 @@ public class FactureServices {
         factureRepository.save(dataBaseFacture);
         return new ResponseEntity<>(HttpStatus.OK);
 
+    }
+    public ResponseEntity<?> relenceFacture(int id, Facture facture) {
+
+        Optional<Facture> factureOptional= factureRepository.findById(id);
+
+        if(!factureOptional.isPresent()){
+            ErrorResponseModel errorResponseModel = new ErrorResponseModel ("facture not found");
+            return new ResponseEntity<>(errorResponseModel,HttpStatus.BAD_REQUEST);
+        }
+
+        Facture dataBaseFacture= factureOptional.get();
+
+        if(facture.getNbrelancement() != 0){
+            if(!dataBaseFacture.isPayed()) {
+                float montant = dataBaseFacture.getMontant() + dataBaseFacture.getMontant_relance();
+                int nb_relance = dataBaseFacture.getNbrelancement() + facture.getNbrelancement();
+                dataBaseFacture.setNbrelancement(nb_relance);
+                dataBaseFacture.setMontant(montant);
+            }
+        }
+        factureRepository.save(dataBaseFacture);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
