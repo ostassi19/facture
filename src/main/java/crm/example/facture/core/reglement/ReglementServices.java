@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import crm.example.facture.utils.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -40,14 +41,20 @@ public class ReglementServices {
     }
     public ResponseEntity<?> creatReglement(Reglement reglement) {
 
+        Date d;
+        d= reglement.getDelai();
+        reglement.setDate(new Date());
+        reglement.setDelai(d);
+
         float montant = 0;
-        if (!reglement.getFactures().isEmpty()) {
+        if (!reglement.getFactures().isEmpty()) {//calculer le montant du reglement s'il contient une seule facture qui
+            //va etre payer d'un seul coup
             if (reglement.getMonatant() != null && reglement.getFactures().size() == 1 && reglement.getType() == 1){
                 montant = reglement.getMonatant();
-                reglement();
+                reglement();// c'est bon on va annoncé que c'est une facture réglé
                 //System.out.println("momtant:" + montant);
             }
-            else if (reglement.getMonatant() == null
+            else if (reglement.getMonatant() == null// calculer le montant pour les reglement qui ont plusieurs facture
                     && reglement.getFactures().size() > 1
                     && reglement.getType() == 2 ) {
                 final float[] m = {0};
@@ -68,6 +75,7 @@ public class ReglementServices {
         }
         //System.out.println(montant);
         reglement.setMonatant(montant);
+
         reglement = reglementRepository.save(reglement);
         return new ResponseEntity<>(reglement, HttpStatus.OK);
     }

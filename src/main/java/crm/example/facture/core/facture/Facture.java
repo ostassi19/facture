@@ -29,7 +29,7 @@ public class Facture {
     private float montant;
     private float montant_relance;
     private int nbrelancement;
-    private boolean etat_reglement;
+    private boolean etat_reglement;/// type reglement : total, partiel
     private boolean isPayed;
     private boolean isregled;
 
@@ -40,6 +40,14 @@ public class Facture {
             joinColumns = @JoinColumn(name = "ref_facture"),
             inverseJoinColumns = @JoinColumn(name = "ref_commande"))
     private List<Commande> commandes = new ArrayList<Commande>();
+
+    @ManyToOne
+    @JoinColumn(name = "Entreprise")
+    private Entreprise entreprises;
+
+    @ManyToOne
+    @JoinColumn(name = "Personnel")
+    private Personnel personnels;
 
 
 }

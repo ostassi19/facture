@@ -84,7 +84,8 @@ public class FactureServices {
         if(facture.getDatePaiement() != null)
             dataBaseFacture.setDatePaiement(facture.getDatePaiement());
 
-        if(!facture.getCommandes().isEmpty())
+        if(!facture.getCommandes().isEmpty())// fonction permettant d'ajouter des commandes lors de la modification d'une
+            //facture
         {
             List<Commande> comm = new ArrayList<Commande>();
             facture.getCommandes().forEach(
@@ -102,6 +103,7 @@ public class FactureServices {
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
+
     public ResponseEntity<?> relenceFacture(int id, Facture facture) {
 
         Optional<Facture> factureOptional= factureRepository.findById(id);
@@ -115,8 +117,10 @@ public class FactureServices {
 
         if(facture.getNbrelancement() != 0){
             if(!dataBaseFacture.isPayed()) {
-                float montant = dataBaseFacture.getMontant() + dataBaseFacture.getMontant_relance();
-                int nb_relance = dataBaseFacture.getNbrelancement() + facture.getNbrelancement();
+                float montant = dataBaseFacture.getMontant() + dataBaseFacture.getMontant_relance();// on va discuter
+                // sur le montant de relancement
+                int nb_relance = dataBaseFacture.getNbrelancement() + facture.getNbrelancement();// !!
+                // dataBaseFacture.getNbrelancement() +1
                 dataBaseFacture.setNbrelancement(nb_relance);
                 dataBaseFacture.setMontant(montant);
             }

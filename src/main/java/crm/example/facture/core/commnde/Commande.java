@@ -21,10 +21,10 @@ public class Commande {
 
     private String refCommande;
     private Date date;
-    private float prix_unitaire;
-    private  float reduction;
-    private String ref_produit;
-    private String Designation_produit;
+    private float prixUnitaire;
+        private  float reduction;
+    private String refProduit;
+    private String designationProduit;
     private float tva;
     private int quantité;
     private float montant;

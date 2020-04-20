@@ -22,7 +22,7 @@ public class CommandeServices {
 
         float prix;
 
-        prix = commande.getPrix_unitaire() * commande.getQuantité() *(1- commande.getReduction() ) * (1 + commande.getTva());
+        prix = commande.getPrixUnitaire() * commande.getQuantité() *(1- commande.getReduction() ) * (1 + commande.getTva());
         commande.setMontant(prix);
         commande.setDate(new Date());
         commande = commandeRepository.save(commande);
