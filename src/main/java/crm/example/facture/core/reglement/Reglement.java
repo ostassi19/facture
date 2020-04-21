@@ -1,6 +1,5 @@
 package crm.example.facture.core.reglement;
 
-import crm.example.facture.core.entreprise.Entreprise;
 import crm.example.facture.core.facture.Facture;
 import crm.example.facture.core.personnel.Personnel;
 import lombok.Getter;
@@ -28,7 +27,7 @@ public class Reglement {
     private Date date;
     private Date delai;
     private boolean etat;
-    private int type;
+    private boolean type;
 
     // lina a7na n7ibou njibou les Entreprise il kol (selecet all) : @ManyToOne
     // behi
@@ -36,9 +35,7 @@ public class Reglement {
     // kima ili declarer : private Entreprise
     // watha7a hathi ? oui wadha
     // ritha "entreprises" haki ili bech norbtou beha lil table facture "mappedBy" watha7 ?yes behi
-    @ManyToOne
-    @JoinColumn(name = "Entreprise")
-    private Entreprise entreprises;
+
 
     @ManyToOne
     @JoinColumn(name = "Personnel")

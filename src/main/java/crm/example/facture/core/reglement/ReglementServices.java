@@ -34,9 +34,10 @@ public class ReglementServices {
     @Autowired
     EntrepriseRepository entrepriseRepository;
 
-    public void reglement (){
+    public void reglement (Facture f, boolean etat_reglemet){
         Facture ff = new Facture();
         ff.setIsregled(true);
+        ff.setEtat_reglement(etat_reglemet);
         factureRepository.save(ff);
     }
     public ResponseEntity<?> creatReglement(Reglement reglement) {
@@ -49,23 +50,32 @@ public class ReglementServices {
         float montant = 0;
         if (!reglement.getFactures().isEmpty()) {//calculer le montant du reglement s'il contient une seule facture qui
             //va etre payer d'un seul coup
-            if (reglement.getMonatant() != null && reglement.getFactures().size() == 1 && reglement.getType() == 1){
+            if (reglement.getMonatant() != null && reglement.getFactures().size() == 1 && reglement.isType() == true){
                 montant = reglement.getMonatant();
-                reglement();// c'est bon on va annoncé que c'est une facture réglé
-                //System.out.println("momtant:" + montant);
-            }
-            else if (reglement.getMonatant() == null// calculer le montant pour les reglement qui ont plusieurs facture
-                    && reglement.getFactures().size() > 1
-                    && reglement.getType() == 2 ) {
-                final float[] m = {0};
+                //reglement(, reglement.isType());// c'est bon on va annoncé que c'est une facture réglé
                 reglement.getFactures().forEach(
                         facture -> {
                             Optional<Facture> facture1 = factureRepository.findById(facture.getId());
+
+                            Facture f = facture1.get();
+                            f.setEtat_reglement(true);
+                            f.setIsregled(true);
+                            factureRepository.save(f);
+                        });
+            }
+            else if (reglement.getMonatant() == null// calculer le montant pour les reglement qui ont plusieurs facture
+                    && reglement.getFactures().size() >= 1
+                    && reglement.isType() == false ) {
+                final float[] m = {0};
+                reglement.getFactures().forEach(
+                        facture -> {
+                           Optional<Facture> facture1 = factureRepository.findById(facture.getId());
+
                             Facture f = facture1.get();
                             m[0] += f.getMontant();
-                            reglement();
-                            /*System.out.println("montant fact:" + f.getMontant());
-                            System.out.println("m:" + m[0]);*/
+                            f.setEtat_reglement(false);
+                            f.setIsregled(true);
+                            factureRepository.save(f);
                         });
                 montant = m[0];
                 /*System.out.println("m : "+m);
@@ -149,13 +159,7 @@ public class ReglementServices {
                 dataBaseReglement.setPersonnels(personnel.get());
             }
         }
-        if( reglement.getEntreprises() != null)
-        {
-            Optional<Entreprise> entreprise = entrepriseRepository.findById(reglement.getEntreprises().getId());
-            if (entreprise != null){
-                dataBaseReglement.setEntreprises(entreprise.get());
-            }
-        }
+
 
 
         reglementRepository.save(dataBaseReglement);

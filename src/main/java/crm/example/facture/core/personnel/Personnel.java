@@ -1,5 +1,6 @@
 package crm.example.facture.core.personnel;
 
+import crm.example.facture.core.entreprise.Entreprise;
 import crm.example.facture.core.facture.Facture;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +30,9 @@ public class Personnel {
     private String adresse_personnel;
     private String adresse_professionel;
 
+    @ManyToOne
+    @JoinColumn(name = "Entreprise")
+    private Entreprise entreprises;
 
 
     /*@OneToMany(mappedBy = "facture", cascade = CascadeType.ALL)

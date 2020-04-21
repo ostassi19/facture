@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -30,6 +31,10 @@ public class FactureController {
 
         return factureServices.getOneFacture(id);
     }
+     @GetMapping("/{id}/personne")
+     public List<Facture> findByPersonne(@PathVariable int id){
+        return factureServices.findByPersonne(id);
+     }
 
 
     @DeleteMapping("/{id}/delete")

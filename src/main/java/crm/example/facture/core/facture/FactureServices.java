@@ -4,7 +4,6 @@ import crm.example.facture.core.commnde.Commande;
 import crm.example.facture.core.commnde.CommandeRepository;
 import crm.example.facture.core.personnel.Personnel;
 import crm.example.facture.core.personnel.PersonnelRepository;
-import crm.example.facture.core.reglement.Reglement;
 import crm.example.facture.core.reglement.ReglementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,35 @@ public class FactureServices {
 
     public ResponseEntity<?> creatFacture(Facture facture) {
 
+        facture.setDateEmission(new Date());
+
+
+        float montant = 0;
+        if (!facture.getCommandes().isEmpty()) {//calculer le montant du reglement s'il contient une seule facture qui
+
+                final float[] m = {0};
+                facture.getCommandes().forEach(
+                        commande -> {
+                            Optional<Commande> commande1 = commandeRepository.findById(commande.getId());
+
+                            Commande f = commande1.get();
+                            m[0] += f.getMontant();
+
+                            commandeRepository.save(f);
+                        });
+                montant = m[0];
+                /*System.out.println("m : "+m);
+                System.out.println("m[0] : "+m[0]);
+                System.out.println("montant: "+montant);*/
+            }
+
+        //System.out.println(montant);
+        facture.setMontant(montant);
+
+
+
         facture.setNbrelancement(0);
+
         facture = factureRepository.save(facture);
         return new ResponseEntity<>(facture, HttpStatus.OK);
 
@@ -40,6 +67,13 @@ public class FactureServices {
     public List<Facture> getFactures() {
 
         return factureRepository.findAll();
+    }
+    public List<Facture> findByPersonne(int id) {
+
+        Optional<Personnel> personnel=personnelRepository.findById(id);
+        Personnel per = personnel.get();
+
+        return  factureRepository.findAllByPersonnels(per);
     }
 
     public ResponseEntity<?> getOneFacture(int id) {
@@ -128,4 +162,6 @@ public class FactureServices {
         factureRepository.save(dataBaseFacture);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
 }
