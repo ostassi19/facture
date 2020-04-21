@@ -4,6 +4,7 @@ import crm.example.facture.core.commnde.Commande;
 import crm.example.facture.core.commnde.CommandeRepository;
 import crm.example.facture.core.personnel.Personnel;
 import crm.example.facture.core.personnel.PersonnelRepository;
+import crm.example.facture.core.reglement.Reglement;
 import crm.example.facture.core.reglement.ReglementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,28 +36,22 @@ public class FactureServices {
 
         float montant = 0;
         if (!facture.getCommandes().isEmpty()) {//calculer le montant du reglement s'il contient une seule facture qui
-
-                final float[] m = {0};
-                facture.getCommandes().forEach(
-                        commande -> {
-                            Optional<Commande> commande1 = commandeRepository.findById(commande.getId());
-
-                            Commande f = commande1.get();
-                            m[0] += f.getMontant();
-
-                            commandeRepository.save(f);
-                        });
-                montant = m[0];
-                /*System.out.println("m : "+m);
-                System.out.println("m[0] : "+m[0]);
-                System.out.println("montant: "+montant);*/
-            }
-
+            final float[] m = {0};
+            facture.getCommandes().forEach(
+                    commande -> {
+                        Optional<Commande> commande1 = commandeRepository.findById(commande.getId());
+                        Commande f = commande1.get();
+                        m[0] += f.getMontant();
+                        commandeRepository.save(f);
+                    });
+            montant = m[0];
+        }
         //System.out.println(montant);
         facture.setMontant(montant);
 
-
-
+        facture.setPayed(false);
+        facture.setIsregled(false);
+        facture.setEtat_reglement(false);
         facture.setNbrelancement(0);
 
         facture = factureRepository.save(facture);
@@ -95,6 +90,14 @@ public class FactureServices {
             ErrorResponseModel errorResponseModel = new ErrorResponseModel ("facture not found");
             return new ResponseEntity<>(errorResponseModel,HttpStatus.BAD_REQUEST);
         }
+        Facture f = factureOptional.get();
+        List<Reglement> r = reglementRepository.findAllByFactures(f);
+        //Reglement rr = r.get();
+        System.out.println("r :"+r);
+        r.forEach(reglement -> {
+            System.out.println(reglement.getId());
+            reglementRepository.deleteById(reglement.getId());
+        });
 
         factureRepository.deleteById(id);
 
@@ -122,17 +125,33 @@ public class FactureServices {
             //facture
         {
             List<Commande> comm = new ArrayList<Commande>();
+            float montant = 0;
+            final float[] m = {0};
             facture.getCommandes().forEach(
                     commande -> {
                         Optional<Commande> c = commandeRepository.findById(commande.getId());
                         Commande cc = c.get();
+                        m[0] += cc.getMontant();
                         comm.add(cc);
+                        System.out.println("mon" + m[0]);
                     });
+            montant = m[0];
             System.out.println("c" + comm);
-            if (!comm.isEmpty())
+            if (!comm.isEmpty()){
                 dataBaseFacture.setCommandes(comm);
+                System.out.println("montant" + montant);
+                dataBaseFacture.setMontant(montant);
+            }
         }
-
+        if(facture.getMontant_relance() != 0){
+            dataBaseFacture.setMontant_relance(facture.getMontant_relance());
+        }
+        if(facture.getRefFacture() != null){
+            dataBaseFacture.setRefFacture(facture.getRefFacture());
+        }
+        if(facture.getDateFacture() != null){
+            dataBaseFacture.setDateFacture(facture.getDateFacture());
+        }
         factureRepository.save(dataBaseFacture);
         return new ResponseEntity<>(HttpStatus.OK);
 
