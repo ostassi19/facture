@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import crm.example.facture.utils.*;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -49,9 +50,9 @@ public class FactureServices {
         //System.out.println(montant);
         facture.setMontant(montant);
 
-        facture.setPayed(false);
-        facture.setIsregled(false);
-        facture.setEtat_reglement(false);
+        facture.setPayed(false);// facture initialement non payé
+        facture.setIsregled(false); //facture initialement non reglé
+        facture.setEtat_reglement(false); // initialement facture  sera réglé tolalement
         facture.setNbrelancement(0);
 
         facture = factureRepository.save(facture);
@@ -91,9 +92,11 @@ public class FactureServices {
             return new ResponseEntity<>(errorResponseModel,HttpStatus.BAD_REQUEST);
         }
         Facture f = factureOptional.get();
+        // trouver le reglement correspendant à la facture qu'on va supprimer
         List<Reglement> r = reglementRepository.findAllByFactures(f);
         //Reglement rr = r.get();
         System.out.println("r :"+r);
+        // boucle for pour supprimer tous les reglement correspendant à cette facture
         r.forEach(reglement -> {
             System.out.println(reglement.getId());
             reglementRepository.deleteById(reglement.getId());
@@ -152,10 +155,19 @@ public class FactureServices {
         if(facture.getDateFacture() != null){
             dataBaseFacture.setDateFacture(facture.getDateFacture());
         }
+        if(facture.getNbrelancement() != 0){
+            if(!dataBaseFacture.isPayed()) {
+                int nb_relance = dataBaseFacture.getNbrelancement() + 1 ; //facture.getNbrelancement();// !!
+                // dataBaseFacture.getNbrelancement() +1
+                dataBaseFacture.setNbrelancement(nb_relance);
+                //dataBaseFacture.setMontant(montant);
+            }
+        }
         factureRepository.save(dataBaseFacture);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
+
 
     public ResponseEntity<?> relenceFacture(int id, Facture facture) {
 
@@ -167,15 +179,17 @@ public class FactureServices {
         }
 
         Facture dataBaseFacture= factureOptional.get();
+        Date f = new Date();
+        System.out.println("to day is "+f);
+
+
 
         if(facture.getNbrelancement() != 0){
-            if(!dataBaseFacture.isPayed()) {
-                float montant = dataBaseFacture.getMontant() + dataBaseFacture.getMontant_relance();// on va discuter
-                // sur le montant de relancement
+            if(!dataBaseFacture.isPayed() && f.compareTo(dataBaseFacture.getDateFacture()) > 0) {
                 int nb_relance = dataBaseFacture.getNbrelancement() + facture.getNbrelancement();// !!
                 // dataBaseFacture.getNbrelancement() +1
                 dataBaseFacture.setNbrelancement(nb_relance);
-                dataBaseFacture.setMontant(montant);
+                //dataBaseFacture.setMontant(montant);
             }
         }
         factureRepository.save(dataBaseFacture);

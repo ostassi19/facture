@@ -23,7 +23,7 @@ public class Reglement {
 
     private String refReglement;
     private Float monatant;
-
+    private Date dateP;
     private Date date;
     private Date delai;
     private boolean etat;

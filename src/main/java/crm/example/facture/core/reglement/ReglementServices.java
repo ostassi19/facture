@@ -1,5 +1,7 @@
 package crm.example.facture.core.reglement;
 
+import crm.example.facture.core.analyse.Analyse;
+import crm.example.facture.core.analyse.AnalyseRepository;
 import crm.example.facture.core.entreprise.Entreprise;
 import crm.example.facture.core.entreprise.EntrepriseRepository;
 import crm.example.facture.core.facture.Facture;
@@ -33,6 +35,9 @@ public class ReglementServices {
 
     @Autowired
     EntrepriseRepository entrepriseRepository;
+
+    @Autowired
+    AnalyseRepository analyseRepository;
 
     public void reglement (Facture f, boolean etat_reglemet){
         Facture ff = new Facture();
@@ -116,6 +121,7 @@ public class ReglementServices {
             return new ResponseEntity<>(errorResponseModel,HttpStatus.BAD_REQUEST);
         }
 
+
         reglementRepository.deleteById(id);
 
         return new ResponseEntity<>( HttpStatus.OK);
@@ -136,8 +142,14 @@ public class ReglementServices {
         if(reglement.getDelai() != null)
             dataBaseReglement.setDelai(reglement.getDelai());
 
+        if(reglement.isEtat())
+            dataBaseReglement.setEtat(true);
+
         if(reglement.getMonatant() != null)
             dataBaseReglement.setMonatant(reglement.getMonatant());
+
+        if (reglement.getRefReglement() !=null)
+            dataBaseReglement.setRefReglement(reglement.getRefReglement());
 
         if(!reglement.getFactures().isEmpty())
         {
@@ -159,6 +171,36 @@ public class ReglementServices {
                 dataBaseReglement.setPersonnels(personnel.get());
             }
         }
+
+        if(reglement.isEtat())
+            dataBaseReglement.setDateP(new Date());
+System.out.println(" reglement ::: etat : " + reglement.isEtat() + "type :" + reglement.isType());
+        System.out.println(" databasereglement ::: etat : " + dataBaseReglement.isEtat() + "type :" + dataBaseReglement.isType());
+        if(reglement.isEtat()==true && dataBaseReglement.isType()== false){
+
+            List<Facture> fact = new ArrayList<Facture>();
+            dataBaseReglement.getFactures().forEach(
+                    facture -> {
+                        Optional<Facture> f = factureRepository.findById(facture.getId());
+                        Facture ff = f.get();
+                        ff.setPayed(true);
+                        ff.setDatePaiement(new Date());
+
+                        Analyse analyse = new Analyse();
+                        analyse.setRefAnalyse(ff.getRefFacture());
+                        analyse.setDatepaiement(ff.getDatePaiement());
+                        analyse.setNbrelancement(ff.getNbrelancement());
+                        analyseRepository.save(analyse);
+
+                        System.out.println("facture : "+ff);
+                        fact.add(ff);
+                    });
+            System.out.println("fact" + fact);
+            if(!fact.isEmpty())
+                dataBaseReglement.setFactures(fact);
+        }
+
+
 
 
 

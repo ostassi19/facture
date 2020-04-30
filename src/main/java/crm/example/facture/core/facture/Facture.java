@@ -30,7 +30,7 @@ public class Facture {
     private float montant_relance;
     private int nbrelancement;
     private boolean etat_reglement;/// type reglement : total, partiel
-    private boolean Payed;
+    private boolean Payed = false;
     private boolean isregled;
 
 
